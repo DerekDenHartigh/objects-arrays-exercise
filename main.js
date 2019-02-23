@@ -1,6 +1,6 @@
 "use strict";
 (function () {
-let Mario, Luigi, EarthwormJim, theAdversary, God, character, pray, damage; // initializing varaibles
+let Mario, Luigi, EarthwormJim, theAdversary, God, character, pray, damage, characterSelection; // initializing varaibles
 Mario = {
     name : "Mario",
     HP : 100,
@@ -70,35 +70,36 @@ function nameAllTheCharacters(){ // works, maybe rework this with a for each
 function selectCharacters (){
     let characterSelection = prompt("Which character would you like?\n\t1: Mario\n\t2: Luigi\n\t3: Earthworm Jim");
     switch(characterSelection){
-        case 1:
-        case 2:
-        case 3:
+        case "1":
+        case "2":
+        case "3":
             character = characterArray[characterSelection-1]; break;
-        case 777: // hidden character selection
+        case "777": // hidden character selection
             character = God; break;
-        case 666: // hidden character selection
+        case "666": // hidden character selection
             character = theAdversary; break;
         default:
             console.error("ERROR!"); break; // doesn't seem to matter what I enter for characterSelection, always does default...  
     }
     return character;
-    //Replaced below with a switch statement
-    // if (characterSelection>0 && characterSelection<4) {
-    //     character = characterArray[characterSelection-1];
-    //     return character;
-    // }
-    // if (characterSelection === 777) { // hidden character selections
-    //     character = God;
-    //     return character;
-    // }
-    // if (characterSelection === 666){ // hidden character selections
-    //     character = theAdversary;
-    //     return character;
-    // }
-    // else {
-    //     return console.error("ERROR!") 
-    // }
 }
+    // Replaced below with a switch statement
+//     if (characterSelection>0 && characterSelection<4) {
+//         character = characterArray[characterSelection-1];
+//         return character;
+//     }
+//     if (characterSelection === 777) { // hidden character selections
+//         character = God;
+//         return character;
+//     }
+//     if (characterSelection === 666){ // hidden character selections
+//         character = theAdversary;
+//         return character;
+//     }
+//     else {
+//         return console.error("ERROR!") 
+//     }
+// }
 function battleFunction(){
     while((theAdversary.HP > 0) && (character.HP > 0)){
         theAdversary.damage();
@@ -113,11 +114,11 @@ function battleFunction(){
         // console.log(`${character.name} attacks ${theAdversary.name} and deals ${playerDamage} damage, he has ${theAdversary.HP} HP left`);
         // theAdversary.HP -= damage;
         let fleeResponse = prompt("Do you wish to flee from me?");
-        if (fleeResponse === null) {
+        if (fleeResponse === null) { // should only happen when character hits cancel
             console.error("what have you done?"); break;
         }
         else{
-            console.error("You cannot escape!");
+            console.error("You cannot escape!");  // default response
         };
         if (character.HP<10){
             pray = prompt("Do you wish to call for divine aid? or do you got this?").toLowerCase()
@@ -130,18 +131,20 @@ function battleFunction(){
     };
 }
 function conclusion(){
-    if (character.HP<0){
-        console.error(`${character.name}, your soul is forfeit!  You, a mere mortal, were a fool to challenge me!`); return;// works
-    } // had to throw the retrun on because the else was also running.
     if (character===God) {
         console.warn(`"NOOOOOO!"\n\t-${theAdversary.name}\n*A gaping put opens below ${theAdversary.name} spewing hellfire and the acrid stench
         of sulfur.  A bright flash of divine light illumens the battlefield*  When you can finally see again, the pit is gone, no trace remains,
-         and the world has been transformed into paradise.`);
+         and the world has been transformed into paradise.`); return; // works
     }
     if(character===theAdversary){
-        console.error("A house divided cannot stand.");
+        console.error("A house divided cannot stand."); return;
     }
-    else if(theAdversary.HP<=0) console.log(`Well, ${character.name} I don't know how you did it, but you just bested the devil in moral combat.`); // don't think this is really possible
+    if (character.HP<0){
+        console.error(`${character.name}, your soul is forfeit!  You, a mere mortal, were a fool to challenge me!`); return;// works
+    } // had to throw the retrun on because the else was also running.
+    else if(theAdversary.HP<=0) {
+        console.log(`Well, ${character.name} I don't know how you did it, but you just bested the devil in moral combat.`); return;
+    } // don't think this is really possible
     else console.log("Universe Implodes! hit f5 to turn it off and back on again.");
 }
 function theGame(){
